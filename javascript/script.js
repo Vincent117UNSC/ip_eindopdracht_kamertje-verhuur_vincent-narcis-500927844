@@ -65,6 +65,7 @@ function startGame() {
     beginTimer.textContent = startTimer
     setSpelerInformatie()
     wieMagBeginnen()
+    clickGeluid()
 }
 
 function wieMagBeginnen() {
@@ -88,10 +89,12 @@ function startSpel() {
     if(startTimer > 0){
         startTimer--
         beginTimer.textContent = startTimer
+        startGeluid()
     } else {
         clearInterval(intervalStart)
         popupBeginnen.style.display = "none"
         startAftellen()
+        startHornGeluid()
     }
 }
 
@@ -169,6 +172,21 @@ function eindeGeluid() {
 function timerGeluid() {
     let audioTimer = new Audio('audio/timer-beep.mp3')
     audioTimer.play()
+}
+
+function startGeluid() {
+    let audioStart = new Audio('audio/start-beep.mp3')
+    audioStart.play()
+}
+
+function startHornGeluid() {
+    let audioStartHorn = new Audio('audio/start-horn.mp3')
+    audioStartHorn.play()
+}
+
+function clickGeluid() {
+    let audioClick = new Audio('audio/click.mp3')
+    audioClick.play()
 }
 //De function checkKamertjes is deels gemaakt met behulp van ChatGPT, en weet wel wat er gebeurt.
 //Bron data attributes: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
@@ -297,6 +315,7 @@ function deWinnaar(){
 }
 
 function resetInstellingen() {
+    clickGeluid()
     horizontaalMuren.forEach(horMuur => {
         horMuur.src = "img/muur-horizontaal-leeg.svg"
         horMuur.dataset.isGeplaatst = "false"
