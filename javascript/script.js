@@ -111,6 +111,9 @@ function beurtAftellen() {
         wisselSpeler()
         herstartTimer()
     }
+    if(beurtTimer < 3){
+        timerGeluid()
+    }
 }
 function herstartTimer() {
     clearInterval(intervalBeurt)
@@ -140,10 +143,31 @@ function plaatsMuur(muur) {
     muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
     muur.dataset.isGeplaatst = "true"
     checkKamertjes()
+    plaatsMuurGeluid()
     if(!eindeSpel){
         wisselSpeler()
         herstartTimer()
     }
+}
+
+function plaatsMuurGeluid() {
+    let audioMuur = new Audio('audio/plaats-muur.mp3')
+    audioMuur.play()
+}
+
+function kamertjeGeluid() {
+    let audioKamertje = new Audio('audio/kamertje-gemaakt.mp3')
+    audioKamertje.play()
+}
+
+function eindeGeluid() {
+    let audioEinde = new Audio('audio/einde-cheer.mp3')
+    audioEinde.play()
+}
+
+function timerGeluid() {
+    let audioTimer = new Audio('audio/timer-beep.mp3')
+    audioTimer.play()
 }
 //De function checkKamertjes is deels gemaakt met behulp van ChatGPT, en weet wel wat er gebeurt.
 //Bron data attributes: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
@@ -184,6 +208,7 @@ function checkKamertjes() {
                 }
                 kamertjeGemaakt = true
                 checkGewonnen()
+                kamertjeGeluid()
             }
         }
     })
@@ -239,6 +264,7 @@ function checkGewonnen() {
 
 function deWinnaar(){
     popupEind.style.display = "flex"
+    eindeGeluid()
     clearInterval(intervalBeurt)
     console.log('Timer stopped in deWinnaar', intervalBeurt)
     if(spelerNaam1 && spelerNaam2){
