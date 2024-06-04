@@ -42,7 +42,7 @@ let intervalBeurt
 let alleKamertjesGevuld = true
 let eindeSpel = false
 
-let veldGrootte = 3
+let veldGrootte = 5
 
 console.log(huidigeSpeler)
 console.log(spelerNaam1)
