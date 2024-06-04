@@ -149,7 +149,8 @@ function plaatsMuur(muur) {
         herstartTimer()
     }
 }
-
+//Bron Audio en .play(): https://stackoverflow.com/questions/9419263/how-to-play-audio
+//Bron mp3 Zapsplat: https://www.zapsplat.com/page/2/?s=cheer&post_type=music&sound-effect-category-id
 function plaatsMuurGeluid() {
     let audioMuur = new Audio('audio/plaats-muur.mp3')
     audioMuur.play()
