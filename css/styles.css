@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+/*background-image is gegenereerd met adobe firefly met eigen input*/
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    background-image: url(../img/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#speelveld {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    border: 3px solid rgb(15, 80, 21);
+    border-radius: 5px;
+    background: #D9D9D9;
+    margin: 10px;
+    width: 420px;
+    height: 420px;
+}
+
+#speelveld div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#bovenBalk h2 {
+    font-size: 2em;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 15px;
+    min-width: 420px;
+    background: #D9D9D9;
+}
+
+#bovenBalk {
+    display: flex;
+}
+
+#home1 {
+    max-height: 80px;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 0 15px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+}
+
+#home1:hover {
+    background-color: #45a049;
+}
+
+#timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    height: 80px;
+    width: 80px;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 0 15px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+#herstart-knop {
+    max-height: 80px;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 0 15px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+}
+
+#herstart-knop:hover {
+    background-color: #45a049;
+}
+
+#onderBalk {
+    display: flex;
+    justify-content: space-around;
+}
+
+#onderBalk p {
+    font-size: 2.5em;
+    border: 2px solid black;
+    padding: 5px 3px;
+    margin: 0 15px;
+    border-radius: 5px;
+    min-width: 250px;
+}
+
+#blueBox {
+    display: flex;
+    justify-content: space-between;
+    background-color: #3787FF;
+}
+
+#redBox {
+    display: flex;
+    justify-content: space-between;
+    background-color: #FF5555;
+}
+
+#speler1, #speler2{
+    flex: 1;
+    text-align: center;
+}
+
+#score-speler1, #score-speler2 {
+    margin-left: auto;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 2px 5px;
+    margin: 0 3px;
+    text-align: center;
+    min-width: 40px;
+    background-color: white;
+}
+/*Vanaf hier css voor de start pagina/pop-up*/
+
+#popupStart {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #daffc4;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 640px;
+    height: 620px;
+}
+
+.popup-content h1 {
+    background-color: aliceblue;
+    padding: 10px;
+    border-radius: 50px;
+    border: 2px solid #00d800;
+}
+
+.popup-content p {
+    background-color: #ffffff;
+    font-size: 1em;
+    padding: 5px;
+    border-bottom: 1px solid rgb(122, 122, 122);
+}
+
+.popup-content p:last-of-type {
+    border-bottom: none;
+}
+
+#intro {
+    background-color: #ffffff;
+    border: 2px solid #00d800;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+#naamInvoer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-content label {
+    margin-top: 10px;
+}
+
+.popup-content input {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 200px;
+    margin: 0 20px;
+    padding: 5px;
+}
+
+#startBtn {
+    margin-top: 10px;
+    width: 300px;
+    font-size: 2em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#startBtn:hover {
+    background-color: #45a049;
+}
+/*Vanaf hier css voor wie mag beginnen pagina/pop-up*/
+#popupBeurt {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#beginTimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15em;
+    color: white;
+    width: 200px;
+    height: 200px;
+    margin: 20px;
+}
+
+#popupBeurt p:last-of-type {
+    background-color: #D9D9D9;
+    font-size: 2em;
+    width: 440px;
+    padding: 10px;
+    margin: 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+/*Vanaf hier css voor de eind pagina/pop-up*/
+.popupWinnaar {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.eind-popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #daffc4;
+    width: 500px;
+    height: 400px;
+    border-radius: 20px;
+    border: 2px solid black;
+}
+
+.eind-popup-content h3 {
+    font-size: 2em;
+    background-color: aliceblue;
+    align-items: center;
+    padding: 5px 15px;
+    border: 2px solid #00d800;
+    border-radius: 30px;
+}
+
+#opnieuw, #home2 {
+    margin-top: 10px;
+    min-width: 150px;
+    margin: 10px;
+    padding: 5px 0;
+    font-size: 1.3em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#opnieuw:hover, #home2:hover {
+    background-color: #45a049;
+}
+
+.eind-popup-content p:nth-last-of-type(2) {
+    padding: 0 40px 25px 40px;
+    border-bottom: 2px solid black;
+}
+
+#winnaar {
+    font-size: 1.8em;
+}
+
+#eindKnoppen {
+    display: flex;
+}
