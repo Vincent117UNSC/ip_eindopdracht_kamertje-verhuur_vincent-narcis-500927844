@@ -36,8 +36,8 @@ let puntenSpeler1 = 0
 let puntenSpeler2 = 0
 let startTimer = 3
 let beurtTimer = 10
-//let beginnen = Math.random()
 
+let kamertjeGemaakt
 let intervalStart
 let intervalBeurt
 let alleKamertjesGevuld = true
@@ -149,11 +149,17 @@ function plaatsMuur(muur) {
     if(muur.dataset.isGeplaatst === "true" || eindeSpel) return
     muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
     muur.dataset.isGeplaatst = "true"
-    checkKamertjes()
     speelGeluid('plaatsMuurGeluid')
+    let kamertjeGemaakt = checkKamertjes()
+    if(kamertjeGemaakt){
+        speelGeluid('kamertjeGevuldGeluid')
+    }
+    console.log(kamertjeGemaakt)
     if(!eindeSpel){
         wisselSpeler()
         herstartTimer()
+    } else {
+        speelGeluid('spelEindeGeluid')
     }
 }
 //Bron Audio en .play(): https://stackoverflow.com/questions/9419263/how-to-play-audio
@@ -175,7 +181,7 @@ function speelGeluid(geluid) {
 //De function checkKamertjes is deels gemaakt met behulp van ChatGPT, en weet wel wat er gebeurt.
 //Bron data attributes: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
 function checkKamertjes() {
-    let kamertjeGemaakt = false
+    kamertjeGemaakt = false
 
     kamertjes.forEach((kamertje, index) => {
         if(kamertje.dataset.isGevuld === "false"){
@@ -241,7 +247,6 @@ function checkGewonnen() {
 
 function deWinnaar(){
     popupEind.style.display = "flex"
-    //speelGeluid('spelEindeGeluid')
     clearInterval(intervalBeurt)
     if(spelerNaam1 && spelerNaam2){
         if(puntenSpeler1 > puntenSpeler2){
@@ -317,7 +322,6 @@ function herlaadPagina() {
     naamInvulSpeler2.value = ''
     popupStart.style.display = "flex"
     resetInstellingen()
-    //herstartSpel()
 }
 
 function plaatsMuurEvent(muur) {
