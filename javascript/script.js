@@ -36,6 +36,7 @@ let puntenSpeler1 = 0
 let puntenSpeler2 = 0
 let startTimer = 3
 let beurtTimer = 10
+//let beginnen = Math.random()
 
 let intervalStart
 let intervalBeurt
@@ -44,13 +45,6 @@ let eindeSpel = false
 
 let veldGrootte = 5
 
-console.log(huidigeSpeler)
-console.log(spelerNaam1)
-console.log(spelerNaam2)
-console.log("Punten speler 1:",puntenSpeler1)
-console.log("Punten speler 2:",puntenSpeler2)
-console.log("Timer beurt:", beurtTimer)
-console.log("Timer start:",startTimer)
 //Bron value: https://stackoverflow.com/questions/44217872/javascript-value-property
 function setEnUpdateSpelerInfo() {
     spelerNaam1 = naamInvulSpeler1.value || "Speler 1"
@@ -78,31 +72,30 @@ function startGame() {
 
 function wieMagBeginnen() {
     let beginnen = Math.random()
-    console.log(beginnen)
     if(beginnen <= 0.5){
         huidigeSpeler = 'speler2'
         wieBegint.textContent = spelerNaam2
         wieBegintWeergave.style.backgroundColor = "#FF5555"
     } else {
+        huidigeSpeler = 'speler1'
         wieBegint.textContent = spelerNaam1
         wieBegintWeergave.style.backgroundColor = "#3787FF"
     }
     intervalStart = setInterval(startSpel, 1000)
     setEnUpdateSpelerInfo()
     popupBeginnen.style.display = "flex"
-    console.log(huidigeSpeler)
 }
 
 function startSpel() {
     if(startTimer > 0){
         startTimer--
         beginTimer.textContent = startTimer
-        speelGeluid('startAftelBeep')
+        //speelGeluid('startAftelBeep')
     } else {
         clearInterval(intervalStart)
         popupBeginnen.style.display = "none"
         startAftellen()
-        speelGeluid('startHorn')
+        //speelGeluid('startHorn')
     }
 }
 
@@ -111,7 +104,6 @@ function startAftellen() {
         clearInterval(intervalBeurt)
     }
     intervalBeurt = setInterval(beurtAftellen, 1000)
-    console.log('Timer started', intervalBeurt)
 }
 
 function beurtAftellen() {
@@ -119,12 +111,12 @@ function beurtAftellen() {
         beurtTimer--
         timer.textContent = beurtTimer
     } else {
-        speelGeluid('misBeurtBuzzer')
+        //speelGeluid('misBeurtBuzzer')
         wisselSpeler()
         herstartTimer()
     }
     if(beurtTimer < 3){
-        speelGeluid('beurtAftelBeep')
+        //speelGeluid('beurtAftelBeep')
         timer.style.border = "10px solid #FF0000"
     } else {
         timer.style.border = "2px solid black"
@@ -199,7 +191,7 @@ function checkKamertjes() {
             let onderMuur = horizontaalMuren[onderMuurIndex]
             let linkerMuur = verticaalMuren[linkerMuurIndex]
             let rechterMuur = verticaalMuren[rechterMuurIndex]
-
+            
             if (bovenMuur.dataset.isGeplaatst === "true" &&
                 onderMuur.dataset.isGeplaatst === "true" &&
                 linkerMuur.dataset.isGeplaatst === "true" &&
@@ -219,7 +211,7 @@ function checkKamertjes() {
                 }
                 kamertjeGemaakt = true
                 checkGewonnen()
-                speelGeluid('kamertjeGevuldGeluid')
+                //speelGeluid('kamertjeGevuldGeluid')
             }
         }
     })
@@ -241,19 +233,16 @@ function checkGewonnen() {
         } 
     })
     if (alleKamertjesGevuld) {
-        console.log("Alle kamertjes zijn gevuld!")
         clearInterval(intervalBeurt)
         eindeSpel = true
-        console.log('Timer stopped in checkGewonnen', intervalBeurt)
         deWinnaar()
     }
 }
 
 function deWinnaar(){
     popupEind.style.display = "flex"
-    speelGeluid('spelEindeGeluid')
+    //speelGeluid('spelEindeGeluid')
     clearInterval(intervalBeurt)
-    console.log('Timer stopped in deWinnaar', intervalBeurt)
     if(spelerNaam1 && spelerNaam2){
         if(puntenSpeler1 > puntenSpeler2){
             winnaar.textContent = spelerNaam1
@@ -283,7 +272,6 @@ function deWinnaar(){
 }
 
 function resetInstellingen() {
-    speelGeluid('clickGeluid')
     horizontaalMuren.forEach(horMuur => {
         horMuur.src = "img/muur-horizontaal-leeg.svg"
         horMuur.dataset.isGeplaatst = "false"
@@ -296,15 +284,12 @@ function resetInstellingen() {
         kamertje.src = "img/kamertje-leeg.svg"
         kamertje.dataset.isGevuld = "false"
     })
-    huidigeSpeler = 'speler1'
     puntenSpeler1 = 0
     puntenSpeler2 = 0
     alleKamertjesGevuld = false
     beurtTimer = 10
     startTimer = 3
     eindeSpel = false
-    beurtIndicator.textContent = spelerNaam1 || "speler 1"
-    beurtWeergave.style.backgroundColor = "#3787FF"
     scoreSpeler1.textContent = puntenSpeler1
     scoreSpeler2.textContent = puntenSpeler2
     popupEind.style.display = "none"
@@ -314,7 +299,9 @@ function resetInstellingen() {
 
 function herstartSpel() {
     resetInstellingen()
-    herstartTimer()
+    clearInterval(intervalStart)
+    wieMagBeginnen()
+    speelGeluid('clickGeluid')
 }
 
 function resetAll() {
@@ -322,6 +309,15 @@ function resetAll() {
     naamInvulSpeler2.value = ''
     popupStart.style.display = "flex"
     resetInstellingen()
+    speelGeluid('clickGeluid')
+}
+
+function herlaadPagina() {
+    naamInvulSpeler1.value = ''
+    naamInvulSpeler2.value = ''
+    popupStart.style.display = "flex"
+    resetInstellingen()
+    //herstartSpel()
 }
 
 function plaatsMuurEvent(muur) {
@@ -344,7 +340,7 @@ homeKnop2.addEventListener('click', resetAll)
 herstartKnop.addEventListener('click', herstartSpel)
 opnieuwKnop.addEventListener('click', herstartSpel)
 
-document.addEventListener('DOMContentLoaded', resetAll)
+document.addEventListener('DOMContentLoaded', herlaadPagina)
 
 //Bron forEach: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 
