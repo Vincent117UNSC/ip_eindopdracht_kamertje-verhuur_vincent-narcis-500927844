@@ -52,20 +52,28 @@ console.log("Punten speler 2:",puntenSpeler2)
 console.log("Timer beurt:", beurtTimer)
 console.log("Timer start:",startTimer)
 //Bron value: https://stackoverflow.com/questions/44217872/javascript-value-property
-function setSpelerInformatie() {
+function setEnUpdateSpelerInfo() {
     spelerNaam1 = naamInvulSpeler1.value || "Speler 1"
     spelerNaam2 = naamInvulSpeler2.value || "Speler 2"
 
     speler1.textContent = spelerNaam1
     speler2.textContent = spelerNaam2
+
+    if(huidigeSpeler === 'speler1'){
+        beurtIndicator.textContent = spelerNaam1
+        beurtWeergave.style.backgroundColor = "#3787FF"
+    } else {
+        beurtIndicator.textContent = spelerNaam2
+        beurtWeergave.style.backgroundColor = "#FF5555"
+    }
 }
 
 function startGame() {
     popupStart.style.display = "none"
     beginTimer.textContent = startTimer
-    setSpelerInformatie()
+    setEnUpdateSpelerInfo()
     wieMagBeginnen()
-    clickGeluid()
+    speelGeluid('clickGeluid')
 }
 
 function wieMagBeginnen() {
@@ -80,7 +88,7 @@ function wieMagBeginnen() {
         wieBegintWeergave.style.backgroundColor = "#3787FF"
     }
     intervalStart = setInterval(startSpel, 1000)
-    updateSpelerInfo()
+    setEnUpdateSpelerInfo()
     popupBeginnen.style.display = "flex"
     console.log(huidigeSpeler)
 }
@@ -89,12 +97,12 @@ function startSpel() {
     if(startTimer > 0){
         startTimer--
         beginTimer.textContent = startTimer
-        startGeluid()
+        speelGeluid('startAftelBeep')
     } else {
         clearInterval(intervalStart)
         popupBeginnen.style.display = "none"
         startAftellen()
-        startHornGeluid()
+        speelGeluid('startHorn')
     }
 }
 
@@ -111,11 +119,15 @@ function beurtAftellen() {
         beurtTimer--
         timer.textContent = beurtTimer
     } else {
+        speelGeluid('misBeurtBuzzer')
         wisselSpeler()
         herstartTimer()
     }
     if(beurtTimer < 3){
-        timerGeluid()
+        speelGeluid('beurtAftelBeep')
+        timer.style.border = "10px solid #FF0000"
+    } else {
+        timer.style.border = "2px solid black"
     }
 }
 function herstartTimer() {
@@ -146,7 +158,7 @@ function plaatsMuur(muur) {
     muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
     muur.dataset.isGeplaatst = "true"
     checkKamertjes()
-    plaatsMuurGeluid()
+    speelGeluid('plaatsMuurGeluid')
     if(!eindeSpel){
         wisselSpeler()
         herstartTimer()
@@ -154,39 +166,19 @@ function plaatsMuur(muur) {
 }
 //Bron Audio en .play(): https://stackoverflow.com/questions/9419263/how-to-play-audio
 //Bron mp3 Zapsplat: https://www.zapsplat.com/page/2/?s=cheer&post_type=music&sound-effect-category-id
-function plaatsMuurGeluid() {
-    let audioMuur = new Audio('audio/plaats-muur.mp3')
-    audioMuur.play()
-}
-
-function kamertjeGeluid() {
-    let audioKamertje = new Audio('audio/kamertje-gemaakt.mp3')
-    audioKamertje.play()
-}
-
-function eindeGeluid() {
-    let audioEinde = new Audio('audio/einde-cheer.mp3')
-    audioEinde.play()
-}
-
-function timerGeluid() {
-    let audioTimer = new Audio('audio/timer-beep.mp3')
-    audioTimer.play()
-}
-
-function startGeluid() {
-    let audioStart = new Audio('audio/start-beep.mp3')
-    audioStart.play()
-}
-
-function startHornGeluid() {
-    let audioStartHorn = new Audio('audio/start-horn.mp3')
-    audioStartHorn.play()
-}
-
-function clickGeluid() {
-    let audioClick = new Audio('audio/click.mp3')
-    audioClick.play()
+function speelGeluid(geluid) {
+    const geluiden = {
+        plaatsMuurGeluid: 'audio/plaats-muur.mp3',
+        kamertjeGevuldGeluid: 'audio/kamertje-gemaakt.mp3',
+        spelEindeGeluid: 'audio/einde-cheer.mp3',
+        beurtAftelBeep: 'audio/timer-beep.mp3',
+        startAftelBeep: 'audio/start-beep.mp3',
+        startHorn: 'audio/start-horn.mp3',
+        clickGeluid: 'audio/click.mp3',
+        misBeurtBuzzer: 'audio/buzzer.mp3'
+    }
+    let audio = new Audio(geluiden[geluid])
+    audio.play()
 }
 //De function checkKamertjes is deels gemaakt met behulp van ChatGPT, en weet wel wat er gebeurt.
 //Bron data attributes: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
@@ -227,7 +219,7 @@ function checkKamertjes() {
                 }
                 kamertjeGemaakt = true
                 checkGewonnen()
-                kamertjeGeluid()
+                speelGeluid('kamertjeGevuldGeluid')
             }
         }
     })
@@ -237,32 +229,8 @@ function checkKamertjes() {
 }
 
 function wisselSpeler() {
-    if (huidigeSpeler === 'speler1'){
-        huidigeSpeler = 'speler2'
-    } else {
-        huidigeSpeler = 'speler1'
-    }
-    updateSpelerInfo()
-}
-
-function updateSpelerInfo() {
-    if(spelerNaam1 && spelerNaam2){
-        if(huidigeSpeler === 'speler1'){
-            beurtIndicator.textContent = spelerNaam1
-            beurtWeergave.style.backgroundColor = "#3787FF"
-        } else {
-            beurtIndicator.textContent = spelerNaam2
-            beurtWeergave.style.backgroundColor = "#FF5555"
-        }
-    } else {
-        if(huidigeSpeler === 'speler1'){
-            beurtIndicator.textContent = 'speler 1'
-            beurtWeergave.style.backgroundColor = "#3787FF"
-        } else {
-            beurtIndicator.textContent = 'speler 2'
-            beurtWeergave.style.backgroundColor = "#FF5555"
-        }
-    }
+    huidigeSpeler = huidigeSpeler === 'speler1' ? 'speler2' : 'speler1'
+    setEnUpdateSpelerInfo()
 }
 
 function checkGewonnen() {
@@ -283,7 +251,7 @@ function checkGewonnen() {
 
 function deWinnaar(){
     popupEind.style.display = "flex"
-    eindeGeluid()
+    speelGeluid('spelEindeGeluid')
     clearInterval(intervalBeurt)
     console.log('Timer stopped in deWinnaar', intervalBeurt)
     if(spelerNaam1 && spelerNaam2){
@@ -315,7 +283,7 @@ function deWinnaar(){
 }
 
 function resetInstellingen() {
-    clickGeluid()
+    speelGeluid('clickGeluid')
     horizontaalMuren.forEach(horMuur => {
         horMuur.src = "img/muur-horizontaal-leeg.svg"
         horMuur.dataset.isGeplaatst = "false"
@@ -356,22 +324,18 @@ function resetAll() {
     resetInstellingen()
 }
 
+function plaatsMuurEvent(muur) {
+    muur.dataset.isGeplaatst = "false"
+    muur.addEventListener('mouseover', () => hoverOnMuur(muur))
+    muur.addEventListener('mouseout', () => hoverOffMuur(muur))
+    muur.addEventListener('click', () => plaatsMuur(muur))
+}
+
+horizontaalMuren.forEach(muur => plaatsMuurEvent(muur))
+verticaalMuren.forEach(muur => plaatsMuurEvent(muur))
+
 kamertjes.forEach(kamerje => {
     kamerje.dataset.isGevuld = "false"
-})
-
-horizontaalMuren.forEach(horMuur => {
-    horMuur.dataset.isGeplaatst = "false"
-    horMuur.addEventListener('mouseover', () => hoverOnMuur(horMuur))
-    horMuur.addEventListener('mouseout', () => hoverOffMuur(horMuur))
-    horMuur.addEventListener('click', () => plaatsMuur(horMuur))
-})
-
-verticaalMuren.forEach(verMuur => {
-    verMuur.dataset.isGeplaatst = "false"
-    verMuur.addEventListener('mouseover', () => hoverOnMuur(verMuur))
-    verMuur.addEventListener('mouseout', () => hoverOffMuur(verMuur))
-    verMuur.addEventListener('click', () => plaatsMuur(verMuur))
 })
 
 startKnop.addEventListener('click', startGame)

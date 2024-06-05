@@ -249,7 +249,7 @@ body {
     border-radius: 5px;
 }
 /*Vanaf hier css voor de eind pagina/pop-up*/
-.popupWinnaar {
+#popupEinde {
     display: none;
     justify-content: center;
     align-items: center;
@@ -299,9 +299,17 @@ body {
     background-color: #45a049;
 }
 
-.eind-popup-content p:nth-last-of-type(2) {
+.eind-popup-content p:nth-of-type(2) {
     padding: 0 40px 25px 40px;
     border-bottom: 2px solid black;
+}
+
+.eind-popup-content p:last-of-type {
+    font-size: .7em;
+}
+
+.eind-popup-content a {
+    text-decoration: none;
 }
 
 #winnaar {
