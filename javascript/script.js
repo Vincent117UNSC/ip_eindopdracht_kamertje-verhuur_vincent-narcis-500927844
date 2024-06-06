@@ -8,11 +8,12 @@ const homeKnop2 = document.querySelector("#home2")
 const herstartKnop = document.querySelector("#herstart-knop")
 const opnieuwKnop = document.querySelector('#opnieuw')
 
-const beurtIndicator = document.querySelector("#spelers-beurt")
 const popupStart = document.querySelector("#popupStart")
 const popupBeginnen = document.querySelector("#popupBeurt")
 const popupEind = document.querySelector("#popupEinde")
+const beurtIndicator = document.querySelector("#spelers-beurt")
 const beurtWeergave = document.querySelector("h2")
+const wieBegint = document.querySelector("#wieBegint")
 const wieBegintWeergave = document.querySelector("#wieBegintBox")
 const beginTimer = document.querySelector("#beginTimer")
 const timer = document.querySelector("#timer")
@@ -21,7 +22,6 @@ const speler1 = document.querySelector("#speler1")
 const speler2 = document.querySelector("#speler2")
 const naamInvulSpeler1 = document.querySelector("#spelerNaam1")
 const naamInvulSpeler2 = document.querySelector("#spelerNaam2")
-const wieBegint = document.querySelector("#wieBegint")
 const scoreSpeler1 = document.querySelector("#score-speler1")
 const scoreSpeler2 = document.querySelector("#score-speler2")
 const winnaar = document.querySelector('#winnaar')
@@ -34,18 +34,36 @@ let spelerNaam1 = ''
 let spelerNaam2 = ''
 let puntenSpeler1 = 0
 let puntenSpeler2 = 0
+
 let startTimer = 3
 let beurtTimer = 10
-
-let kamertjeGemaakt
 let intervalStart
 let intervalBeurt
+let kamertjeGemaakt
 let alleKamertjesGevuld = true
 let eindeSpel = false
-
 let veldGrootte = 5
 
-//Bron value: https://stackoverflow.com/questions/44217872/javascript-value-property
+//Hier de code die zorgt voor het inladen van de geluidsbestanden.
+//Bron Audio en .play(): https://stackoverflow.com/questions/9419263/how-to-play-audio
+//Bron mp3 Zapsplat: https://www.zapsplat.com/page/2/?s=cheer&post_type=music&sound-effect-category-id
+function speelGeluid(geluid) {
+    const geluiden = {
+        plaatsMuurGeluid: 'audio/plaats-muur.mp3',
+        kamertjeGevuldGeluid: 'audio/kamertje-gemaakt.mp3',
+        spelEindeGeluid: 'audio/einde-cheer.mp3',
+        beurtAftelBeep: 'audio/timer-beep.mp3',
+        startAftelBeep: 'audio/start-beep.mp3',
+        startHorn: 'audio/start-horn.mp3',
+        clickGeluid: 'audio/click.mp3',
+        misBeurtBuzzer: 'audio/buzzer.mp3'
+    }
+    let audio = new Audio(geluiden[geluid])
+    audio.play()
+}
+
+// Vanaf hier de code die voor het starten van het spel zorgt.
+// Bron value: https://stackoverflow.com/questions/44217872/javascript-value-property
 function setEnUpdateSpelerInfo() {
     spelerNaam1 = naamInvulSpeler1.value || "Speler 1"
     spelerNaam2 = naamInvulSpeler2.value || "Speler 2"
@@ -64,13 +82,13 @@ function setEnUpdateSpelerInfo() {
 
 function startGame() {
     popupStart.style.display = "none"
-    beginTimer.textContent = startTimer
     setEnUpdateSpelerInfo()
     wieMagBeginnen()
     speelGeluid('clickGeluid')
 }
 
 function wieMagBeginnen() {
+    beginTimer.textContent = startTimer
     let beginnen = Math.random()
     if(beginnen <= 0.5){
         huidigeSpeler = 'speler2'
@@ -81,6 +99,7 @@ function wieMagBeginnen() {
         wieBegint.textContent = spelerNaam1
         wieBegintWeergave.style.backgroundColor = "#3787FF"
     }
+    beginTimer.textContent = startTimer
     intervalStart = setInterval(startSpel, 1000)
     setEnUpdateSpelerInfo()
     popupBeginnen.style.display = "flex"
@@ -90,15 +109,16 @@ function startSpel() {
     if(startTimer > 0){
         startTimer--
         beginTimer.textContent = startTimer
-        //speelGeluid('startAftelBeep')
+        speelGeluid('startAftelBeep')
     } else {
         clearInterval(intervalStart)
         popupBeginnen.style.display = "none"
         startAftellen()
-        //speelGeluid('startHorn')
+        speelGeluid('startHorn')
     }
 }
 
+//Vanaf hier de code die verantwoordelijk is voor de timer, die een beurt van een speler afteld.
 function startAftellen() {
     if(intervalBeurt){
         clearInterval(intervalBeurt)
@@ -111,12 +131,12 @@ function beurtAftellen() {
         beurtTimer--
         timer.textContent = beurtTimer
     } else {
-        //speelGeluid('misBeurtBuzzer')
+        speelGeluid('misBeurtBuzzer')
         wisselSpeler()
         herstartTimer()
     }
     if(beurtTimer < 3){
-        //speelGeluid('beurtAftelBeep')
+        speelGeluid('beurtAftelBeep')
         timer.style.border = "10px solid #FF0000"
     } else {
         timer.style.border = "2px solid black"
@@ -128,6 +148,8 @@ function herstartTimer() {
     timer.textContent = beurtTimer
     startAftellen()
 }
+
+//Vanaf hier de code die verantwoordelijk is voor de muurtjes, het hoveren en plaatsen ervan.
 //Bron ?en: : https://javascript.info/ifelse
 function hoverOnMuur(muur) {
     if(muur.dataset.isGeplaatst === "false"){
@@ -146,38 +168,27 @@ function hoverOffMuur(muur) {
 }
 
 function plaatsMuur(muur) {
-    if(muur.dataset.isGeplaatst === "true" || eindeSpel) return
+    if(muur.dataset.isGeplaatst === "true") return
     muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
     muur.dataset.isGeplaatst = "true"
     speelGeluid('plaatsMuurGeluid')
-    let kamertjeGemaakt = checkKamertjes()
+
+    kamertjeGemaakt = checkKamertjes()
     if(kamertjeGemaakt){
         speelGeluid('kamertjeGevuldGeluid')
+        herstartTimer()
     }
-    console.log(kamertjeGemaakt)
-    if(!eindeSpel){
+    if(!kamertjeGemaakt && !eindeSpel){
         wisselSpeler()
         herstartTimer()
-    } else {
+    }
+    if(eindeSpel){
         speelGeluid('spelEindeGeluid')
+        clearInterval(intervalBeurt)
     }
 }
-//Bron Audio en .play(): https://stackoverflow.com/questions/9419263/how-to-play-audio
-//Bron mp3 Zapsplat: https://www.zapsplat.com/page/2/?s=cheer&post_type=music&sound-effect-category-id
-function speelGeluid(geluid) {
-    const geluiden = {
-        plaatsMuurGeluid: 'audio/plaats-muur.mp3',
-        kamertjeGevuldGeluid: 'audio/kamertje-gemaakt.mp3',
-        spelEindeGeluid: 'audio/einde-cheer.mp3',
-        beurtAftelBeep: 'audio/timer-beep.mp3',
-        startAftelBeep: 'audio/start-beep.mp3',
-        startHorn: 'audio/start-horn.mp3',
-        clickGeluid: 'audio/click.mp3',
-        misBeurtBuzzer: 'audio/buzzer.mp3'
-    }
-    let audio = new Audio(geluiden[geluid])
-    audio.play()
-}
+
+//Dit is de code die kijkt of er een kamertje gevormd is, en hem vervolgens vuld met de kleur van de speler die aan de beurt is.
 //De function checkKamertjes is deels gemaakt met behulp van ChatGPT, en weet wel wat er gebeurt.
 //Bron data attributes: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
 function checkKamertjes() {
@@ -217,15 +228,13 @@ function checkKamertjes() {
                 }
                 kamertjeGemaakt = true
                 checkGewonnen()
-                //speelGeluid('kamertjeGevuldGeluid')
             }
         }
     })
-    if (kamertjeGemaakt && !eindeSpel) {
-        wisselSpeler();
-    }
+    return kamertjeGemaakt
 }
 
+//Vanaf hier de code die de speler wisselt, maar ook checkt wie de winnaar is en dat vervolgens ook laat zien.
 function wisselSpeler() {
     huidigeSpeler = huidigeSpeler === 'speler1' ? 'speler2' : 'speler1'
     setEnUpdateSpelerInfo()
@@ -276,6 +285,7 @@ function deWinnaar(){
     }
 }
 
+//Vanaf hier de code die ervoor zorgt dat bij het herladen van de pagina, of opnieuw het spel spelen, of terug naar homepagina alle waarden reset naar origineel.
 function resetInstellingen() {
     horizontaalMuren.forEach(horMuur => {
         horMuur.src = "img/muur-horizontaal-leeg.svg"
@@ -324,6 +334,7 @@ function herlaadPagina() {
     resetInstellingen()
 }
 
+//En vanaf hier de code voor de Events, die de functies aanroepen.
 function plaatsMuurEvent(muur) {
     muur.dataset.isGeplaatst = "false"
     muur.addEventListener('mouseover', () => hoverOnMuur(muur))
@@ -345,6 +356,3 @@ herstartKnop.addEventListener('click', herstartSpel)
 opnieuwKnop.addEventListener('click', herstartSpel)
 
 document.addEventListener('DOMContentLoaded', herlaadPagina)
-
-//Bron forEach: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-
