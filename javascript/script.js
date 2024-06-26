@@ -99,9 +99,9 @@ function wieMagBeginnen() {
         wieBegint.textContent = spelerNaam1
         wieBegintWeergave.style.backgroundColor = "#3787FF"
     }
-    beginTimer.textContent = startTimer
-    intervalStart = setInterval(startSpel, 1000)
+    //beginTimer.textContent = startTimer
     setEnUpdateSpelerInfo()
+    intervalStart = setInterval(startSpel, 1000)
     popupBeginnen.style.display = "flex"
 }
 
@@ -168,19 +168,20 @@ function hoverOffMuur(muur) {
 }
 
 function plaatsMuur(muur) {
-    if(muur.dataset.isGeplaatst === "true") return
-    muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
-    muur.dataset.isGeplaatst = "true"
-    speelGeluid('plaatsMuurGeluid')
-
-    kamertjeGemaakt = checkKamertjes()
-    if(kamertjeGemaakt){
-        speelGeluid('kamertjeGevuldGeluid')
-        herstartTimer()
-    }
-    if(!kamertjeGemaakt && !eindeSpel){
-        wisselSpeler()
-        herstartTimer()
+    if(muur.dataset.isGeplaatst === "false"){
+        muur.src = muur.classList.contains("muur-hor") ? "img/muur-horizontaal.svg" : "img/muur-verticaal.svg"
+        muur.dataset.isGeplaatst = "true"
+        speelGeluid('plaatsMuurGeluid')
+    
+        kamertjeGemaakt = checkKamertjes()
+        if(kamertjeGemaakt){
+            speelGeluid('kamertjeGevuldGeluid')
+            herstartTimer()
+        }
+        if(!kamertjeGemaakt && !eindeSpel){
+            wisselSpeler()
+            herstartTimer()
+        }
     }
     if(eindeSpel){
         speelGeluid('spelEindeGeluid')
@@ -257,31 +258,16 @@ function checkGewonnen() {
 function deWinnaar(){
     popupEind.style.display = "flex"
     clearInterval(intervalBeurt)
-    if(spelerNaam1 && spelerNaam2){
-        if(puntenSpeler1 > puntenSpeler2){
-            winnaar.textContent = spelerNaam1
-            puntenWinnaar.textContent = puntenSpeler1
-            verliezer.textContent = spelerNaam2
-            puntenVerliezer.textContent = puntenSpeler2
-        } else if(puntenSpeler1 < puntenSpeler2){
-            winnaar.textContent = spelerNaam2
-            puntenWinnaar.textContent = puntenSpeler2
-            verliezer.textContent = spelerNaam1
-            puntenVerliezer.textContent = puntenSpeler1
-        }
-    } else {
-        if(puntenSpeler1 > puntenSpeler2){
-            winnaar.textContent = "Speler 1"
-            puntenWinnaar.textContent = puntenSpeler1
-            verliezer.textContent = "Speler 2"
-            puntenVerliezer.textContent = puntenSpeler2
-        } else if(puntenSpeler1 < puntenSpeler2){
-            winnaar.textContent = "Speler 2"
-            puntenWinnaar.textContent = puntenSpeler2
-            verliezer.textContent = "Speler 1"
-            puntenVerliezer.textContent = puntenSpeler1
-        }
-
+    if(puntenSpeler1 > puntenSpeler2){
+        winnaar.textContent = spelerNaam1
+        puntenWinnaar.textContent = puntenSpeler1
+        verliezer.textContent = spelerNaam2
+        puntenVerliezer.textContent = puntenSpeler2
+    } else if(puntenSpeler1 < puntenSpeler2){
+        winnaar.textContent = spelerNaam2
+        puntenWinnaar.textContent = puntenSpeler2
+        verliezer.textContent = spelerNaam1
+        puntenVerliezer.textContent = puntenSpeler1
     }
 }
 
